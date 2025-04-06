@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors with Ads</title>
+  <style>
+    *, *:before, *:after{
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+    body{
+      height: 100vh;
+      background: linear-gradient(135deg, #ffcf1b, #ff8b1b);
+      text-align: center;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container{
+      width: 45%;
+      min-width: 500px;
+      background-color: #ffffff;
+      padding: 40px 30px;
+      border-radius: 10px;
+      box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .scores{
+      display: flex;
+      justify-content: space-between;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 10px 20px;
+      margin-bottom: 20px;
+    }
+    .weapons{
+      width: 90%;
+      margin: auto;
+      display: flex;
+      justify-content: space-around;
+    }
+    .weapons button{
+      background-color: red;
+      color: #000000;
+      border: none;
+      font-size: 50px;
+      height: 100px;
+      width: 100px;
+      border-radius: 50%;
+      outline: none;
+      cursor: pointer;
+    }
+    .details{
+      margin-top: 30px;
+      text-align: center;
+    }
+    #result{ font-size: 40px;
+      font-weight: bold;
+      padding: 20px 0;
+      margin: 30px auto;
+      letter-spacing: 0.5px;
+    }
+    #user_choice, #comp_choice {
+      font-size: 22px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 10px;
+    }
+    /* Ad Modal */
+    #ad-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.7);
+      width: 45%;
+      min-width: 500px;
+      padding: 40px 30px;
+      border-radius: 10px;
+      box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .ad-content {
+      width: 100%;
+      text-align: center;
+    }
+    .ad-content img {
+      max-width: 100%;
+      border-radius: 5px;
+    }
+    .close-ad {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: red;
+      color: white;
+      border: none;
+      font-size: 20px;
+      padding: 5px 8px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="scores">
+      <p>Computer: <span id="computer_score">0</span></p>
+      <p>You: <span id="user_score">0</span></p>
+    </div>
+    <div class="weapons">
+      <button onclick="checker('rock')">&#9994;</button>
+      <button onclick="checker('paper')">&#9995;</button>
+      <button onclick="checker('scissor')">&#9996;</button>
+    </div>
+    <div class="details">
+      <p id="user_choice"></p>
+      <p id="comp_choice"></p>
+      <p id="result"></p>
+    </div>
+  </div>
+
+  <!-- Ad Modal -->
+  <div id="ad-modal">
+    <div class="ad-content">
+      <button class="close-ad" onclick="closeAd()">&times;</button>
+      <img src="los.webp" alt="Los Pollos Hermanos Ad">
+    </div>
+  </div>
+
+  <script>
+    let [computer_score, user_score] = [0, 0];
+    let result_ref = document.getElementById("result");
+    let choices_object = {
+      'rock': {'rock': 'draw', 'scissor': 'win', 'paper': 'lose'},
+      'scissor': {'rock': 'lose', 'scissor': 'draw', 'paper': 'win'},
+      'paper': {'rock': 'win', 'scissor': 'lose', 'paper': 'draw'}
+    };
+    
+    function checker(input) {
+      var choices = ["rock", "paper", "scissor"];
+      var num = Math.floor(Math.random() * 3);
+      document.getElementById("comp_choice").innerHTML = `Computer chose <span> ${choices[num].toUpperCase()} </span>`;
+      document.getElementById("user_choice").innerHTML = `You chose <span> ${input.toUpperCase()} </span>`;
+      let computer_choice = choices[num];
+      switch (choices_object[input][computer_choice]) {
+        case 'win':
+          result_ref.style.cssText = "background-color: #cefdce; color: #689f38";
+          result_ref.innerHTML = "YOU WIN";
+          user_score++;
+          break;
+        case 'lose':
+          result_ref.style.cssText = "background-color: #ffdde0; color: #d32f2f";
+          result_ref.innerHTML = "YOU LOSE";
+          computer_score++;
+          break;
+        default:
+          result_ref.style.cssText = "background-color: #e5e5e5; color: #808080";
+          result_ref.innerHTML = "DRAW";
+          break;
+      }
+      document.getElementById("computer_score").innerHTML = computer_score;
+      document.getElementById("user_score").innerHTML = user_score;
+      if (user_score === 3 || computer_score === 3) {
+        setTimeout(() => { showAd(); }, 500); 
+      }
+    }
+    function showAd() { document.getElementById('ad-modal').style.display = 'flex'; }
+    function closeAd() {
+      document.getElementById('ad-modal').style.display = 'none';
+      user_score = 0; computer_score = 0;
+      document.getElementById("computer_score").innerHTML = 0;
+      document.getElementById("user_score").innerHTML = 0;
+    }
+  </script>
+</body>
+</html>
